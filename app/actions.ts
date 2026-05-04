@@ -8,6 +8,8 @@ export async function refineLetterAction(text: string): Promise<{ success: boole
     return { success: true, data: refined };
   } catch (error: any) {
     console.error("Action error:", error);
-    return { success: false, error: error?.message || 'Failed to refine words. The universe is busy.' };
+    // Silent fallback to avoid breaking the user's emotional experience
+    return { success: true, data: text };
   }
 }
+

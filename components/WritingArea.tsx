@@ -27,14 +27,12 @@ export default function WritingArea() {
     setIsRefining(true);
     try {
       const response = await refineLetterAction(content);
-      if (!response.success && response.error) {
-        alert(response.error);
-      } else if (response.data) {
+      if (response.data) {
         setContent(response.data);
       }
     } catch (err: any) {
       console.error(err);
-      alert(err?.message || "Failed to refine. Make sure GROQ_API_KEY is active.");
+      // Silent error catching to prevent AI from breaking the experience
     } finally {
       setIsRefining(false);
     }
