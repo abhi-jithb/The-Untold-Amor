@@ -28,8 +28,9 @@ export default function WritingArea() {
     try {
       const refined = await refineLetterAction(content);
       setContent(refined);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      alert(err?.message || "Failed to refine. Make sure GROQ_API_KEY is active.");
     } finally {
       setIsRefining(false);
     }
@@ -81,7 +82,7 @@ export default function WritingArea() {
         <div className="flex gap-4">
           <a href="/write" onClick={() => setState('writing')} className="text-sm text-slate-500 hover:text-slate-300 transition-colors">Write another</a>
           <span className="text-slate-700">|</span>
-          <a href="/feed" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">View whisper wall</a>
+          <a href="/feed" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">Read The Untold Amors</a>
         </div>
       </motion.div>
     );

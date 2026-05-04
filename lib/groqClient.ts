@@ -9,8 +9,7 @@ export const groq = new Groq({
  */
 export async function refineWords(text: string): Promise<string> {
   if (!process.env.GROQ_API_KEY) {
-    // If no key, gracefully return the original text
-    return text;
+    throw new Error('Groq API Key is not configured. Please add it to your environment variables.');
   }
 
   try {
@@ -30,8 +29,8 @@ export async function refineWords(text: string): Promise<string> {
     });
     
     return chatCompletion.choices[0]?.message?.content || text;
-  } catch (error) {
-    console.warn("Groq refinement failed:", error);
-    return text;
+  } catch (error: any) {
+    console.error("Groq refinement failed:", error);
+    throw new Error(error?.message || 'Failed to refine words. The universe is busy.');
   }
 }

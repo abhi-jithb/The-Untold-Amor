@@ -17,7 +17,7 @@ export default function LogoLoader() {
           repeat: Infinity, 
           ease: "easeInOut" 
         }}
-        className="relative w-32 h-32 md:w-48 md:h-48"
+        className="relative w-64 h-64 md:w-96 md:h-96"
       >
         <Image 
           src="/untold_amor_logo.svg" 
