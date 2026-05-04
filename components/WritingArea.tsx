@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { refineLetterAction } from '@/app/actions';
 import SealAnimation from './SealAnimation';
-import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function WritingArea() {
   const [recipient, setRecipient] = useState('');
@@ -55,21 +55,24 @@ export default function WritingArea() {
     setState('done');
   }
 
-
   async function handleLetGo() {
-    if (!isSupabaseConfigured) {
-      alert("Uh oh! You need to add your NEXT_PUBLIC_SUPABASE_URL and key to your .env.local file to release letters fully to the wall.");
-      return;
-    }
+    console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+    console.log("SUPABASE KEY:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
     try {
-      await supabase.from('letters').insert({
-        recipient: recipient.trim() || null,
-        content: content.trim(),
-        is_public: true,
-      });
+      const { data, error } = await supabase.from('letters').insert([
+        {
+          recipient: recipient.trim() || null,
+          content: content.trim(),
+          is_public: true,
+        }
+      ]);
+
+      if (error) {
+        console.error("Insert error:", error);
+      }
     } catch(e) {
-      console.error("Failed to let go:", e);
+      console.error("Failed to let go exception:", e);
     }
     setState('done');
   }
