@@ -1,36 +1,126 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+  
+# The Untold Amor 🌌
 
-## Getting Started
+*A quiet digital sanctuary for words that were felt but never sent.*
 
-First, run the development server:
+[Features](#features) • [Tech Stack](#tech-stack) • [Installation](#installation) • [Keys & Setup](#keys--setup) • [Deployment](#deployment)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+</div>
+
+---
+
+## 🕊️ Soul of the Product
+
+**The Untold Amor** is not a social app. It is a private, sacred space.
+Users write letters to someone they once loved — or still do — but never sent. The act of writing *is* the release. There is no audience, no reply, no algorithm. Just honesty and breath.
+
+- **Expression without fear.**
+- **Release without expectation.**
+- **Closure through vulnerability.**
+
+---
+
+## ✨ Features
+
+- **Sensory UI:** Immersive, clean, and distraction-free writing screen with a dark, slowly-drifting star background.
+- **Deep Intent Animation:** Sealing the letter invokes a deliberate, precious folding animation modeled after an exhale.
+- **Save or Release:** Choose to keep a letter private (saved to your device securely) or release it to the "Whisper Wall" anonymously.
+- **Gentle AI Refinement:** An opt-in, invisible AI (powered by Groq) that gently clarifies your words while strictly preserving your emotional tone.
+- **Whisper Wall:** Find other anonymous feelings without likes, comments, profiles, or gamification. Just a quiet space of shared humanity.
+
+---
+
+## 🧩 Tech Stack
+
+- **Framework:** Next.js (App Router)
+- **Styling:** Tailwind CSS (v4)
+- **Animation:** Framer Motion
+- **Database:** Supabase (PostgreSQL)
+- **AI Core:** Groq API (Llama-3 model)
+- **Icons:** Lucide React
+
+---
+
+## 🗝️ Keys & Setup (What you need to configure)
+
+To bring the project to life locally, you need two free accounts: **Supabase** (for the database) and **Groq** (for the AI).
+
+### 1. Supabase (Database)
+1. Go to [Supabase](https://supabase.com/) and create a new project.
+2. Go to **Project Settings -> API** to find your **Project URL** and **anon public key**.
+3. Go to the **SQL Editor** in Supabase and run this exact schema:
+
+```sql
+CREATE TABLE letters (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    content TEXT NOT NULL,
+    recipient TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    is_public BOOLEAN DEFAULT false
+);
+
+-- Note: Ensure Row Level Security (RLS) allows anonymous inserts/selects.
+-- Run these extra commands if you enabled RLS:
+ALTER TABLE letters ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public select" ON letters FOR SELECT USING (is_public = true);
+CREATE POLICY "Allow anonymous insert" ON letters FOR INSERT WITH CHECK (true);
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Groq (AI Refinement)
+1. Go to [Groq Console](https://console.groq.com) and create an account.
+2. Navigate to **API Keys** and click **Create API Key**. Copy this key.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Add Keys Locally
+Create a `.env.local` file in the root of the project:
+```bash
+touch .env.local
+```
+Add your keys exactly like this:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+GROQ_API_KEY=your_groq_api_key
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+*(These keys will never be pushed to GitHub as `.env.local` is ignored in Git!)*
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Installation & Running Locally
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone & Install:**
+   ```bash
+   git clone https://github.com/abhi-jithb/The-Untold-Amor.git
+   cd The-Untold-Amor
+   npm install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Start the Development Server:**
+   ```bash
+   npm run dev
+   ```
 
-## Deploy on Vercel
+3. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🌍 Hosting The Project Live (Vercel)
+
+The best place to host a Next.js application is [Vercel](https://vercel.com/) (it's free and takes 2 minutes).
+
+1. Push your code to your GitHub repository.
+2. Go to [Vercel.com](https://vercel.com/) and log in with GitHub.
+3. Click **Add New -> Project**.
+4. Import `The-Untold-Amor` from your GitHub repos.
+5. In the **Environment Variables** section before deploying, paste the same three keys you used in `.env.local`:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `GROQ_API_KEY`
+6. Click **Deploy**.
+
+Vercel will build the project and give you a live URL (e.g., `the-untold-amor.vercel.app`) within seconds!
+
+---
+
+*"Some words don't need replies. You can love, without being loved back."*
