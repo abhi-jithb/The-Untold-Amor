@@ -49,22 +49,29 @@ To bring the project to life locally, you need two free accounts: **Supabase** (
 ### 1. Supabase (Database)
 1. Go to [Supabase](https://supabase.com/) and create a new project.
 2. Go to **Project Settings -> API** to find your **Project URL** and **anon public key**.
-3. Go to the **SQL Editor** in Supabase and run this exact schema:
+3. Go to the **SQL Editor** in Supabase and run this exact schema to secure your table:
 
 ```sql
-CREATE TABLE letters (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    content TEXT NOT NULL,
-    recipient TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    is_public BOOLEAN DEFAULT false
+create table letters (
+  id uuid primary key default uuid_generate_v4(),
+  content text not null,
+  recipient text,
+  created_at timestamp with time zone default timezone('utc'::text, now()),
+  is_public boolean default false
 );
 
--- Note: Ensure Row Level Security (RLS) allows anonymous inserts/selects.
--- Run these extra commands if you enabled RLS:
-ALTER TABLE letters ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Allow public select" ON letters FOR SELECT USING (is_public = true);
-CREATE POLICY "Allow anonymous insert" ON letters FOR INSERT WITH CHECK (true);
+-- Row Level Security (VERY IMPORTANT to prevent misuse)
+alter table letters enable row level security;
+
+-- Allow anyone to anonymously add a letter
+create policy "Allow insert for anyone"
+on letters for insert
+with check (true);
+
+-- Allow public letters to be viewable on the Whisper Wall
+create policy "Allow read public letters"
+on letters for select
+using (is_public = true);
 ```
 
 ### 2. Groq (AI Refinement)

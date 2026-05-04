@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 };
 
 import StarBackground from "@/components/StarBackground";
+import AudioPlayer from "@/components/AudioPlayer";
 
 export default function RootLayout({
   children,
@@ -31,8 +32,10 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${lora.variable} bg-slate-950 text-slate-200 antialiased`}>
       <body className="min-h-screen bg-transparent selection:bg-slate-700 font-sans flex flex-col items-center justify-center">
         <StarBackground />
+        <AudioPlayer />
         {children}
       </body>
     </html>
   );
 }
+
