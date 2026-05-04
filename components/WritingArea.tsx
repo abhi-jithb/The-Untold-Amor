@@ -56,6 +56,11 @@ export default function WritingArea() {
   }
 
   async function handleLetGo() {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('empty.supabase')) {
+      alert("Uh oh! .env.local is completely empty. Please make sure you pressed SAVE (Ctrl+S) in your editor and restarted 'npm run dev'.");
+      return;
+    }
+
     console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
     console.log("SUPABASE KEY:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
